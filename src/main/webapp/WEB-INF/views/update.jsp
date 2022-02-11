@@ -44,24 +44,27 @@
 		 
 	<div class="div-style"><h1>Newz Application Assignment</h1></div>
 	
-	<div class="form-center">
-	<form action="saveNews" method="post">
-		<label>Name</label><br/>
-		<input type="text" name="name"/><br/>
-		<label>Author</label><br/>
-		<input type="text" name="author"/><br/>
-		<label>Description</label><br/>
-		<input type="text" name="description"/><br/>
-		<label>Content</label><br/>
-		<input type="text" name="content"/><br/>
-		<input class="submit_button" type="submit" value="Add News"/><br/>
-	</form></div>
+	<c:if test="${! empty NewsById}">
+		<div class="form-center">
+		<form action="update" method="post">
+			<label>Name</label><br/>
+			<input type="text" name="name" value=<c:out value="${NewsById.name}"/>/><br/>
+			<label>Author</label><br/>
+			<input type="text" name="author" value=<c:out value="${NewsById.author}"/>/><br/>
+			<label>Description</label><br/>
+			<input type="text" name="description" value=<c:out value="${NewsById.description}"/>/><br/>
+			<label>Content</label><br/>
+			<input type="text" name="content" value=<c:out value="${NewsById.content}"/>/><br/>
+			<input class="submit_button" type="submit" value="Update News"/><br/>
+		</form>
+		</div>
+		</c:if>
 	
 	<!-- display all existing news in a tabular structure with News Name, News Author, 
 	description, content, Publish Date and Action -->
-	
+		
 	<c:if test="${! empty AllNews}">
-	
+	<br/>
 	<Table class="data_table" border="1">
 		<tr>
 			<th class="th" width="10%">News ID</th>
@@ -73,6 +76,7 @@
 		</tr>
 		
 		<c:forEach items="${AllNews}" var="news">
+		
 		<tr>
 			<td class="th_td" >${news.newsId}</td>
 			<td class="th_td" >${news.name}</td>
