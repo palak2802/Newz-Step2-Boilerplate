@@ -59,8 +59,6 @@ public class NewsControllerTest {
         		"We expect Iran to assure its readiness for a full and open investigation", localDate);
     }
 
-
-
 	@Test
 	public void testIndexPage() throws Exception {
 		mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(forwardedUrl("index"));

@@ -38,21 +38,21 @@ public class News
 	}
 
 	public News(int newsId, String name, String author, String description, String content, LocalDateTime publishedAt) {
-		this();
+		this.newsId = newsId;
 		this.name = name;
 		this.author = author;
 		this.description = description;
 		this.content = content;
+		this.publishedAt = publishedAt;
 	}
 	
 	public News(String name, String author, String description, String content) {
-		this();
 		this.name = name;
 		this.author = author;
 		this.description = description;
 		this.content = content;
 	}
-	
+
 	public int getNewsId() {
 		return this.newsId;
 	}

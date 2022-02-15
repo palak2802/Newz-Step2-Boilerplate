@@ -59,10 +59,20 @@ public class NewsDAOImpl extends AbstractDao implements NewsDAO {
 	}
 
 	public boolean updateNews(News news) {
-		News newss = getSession().get(News.class, news.getNewsId());
-		System.out.println("NewsById: "+newss);
-		getSession().update(news);
-		return true;
+		News newsById = getSession().get(News.class, news.getNewsId());
+		System.out.println("NewsById: "+newsById);
+		if(newsById == null) {
+			System.out.println("News by "+news.getNewsId()+ " is not in database. Cannot Update.");
+			return false;
+		}
+		else {
+			newsById.setAuthor(news.getAuthor());
+			newsById.setContent(news.getContent());
+			newsById.setDescription(news.getDescription());
+			newsById.setName(news.getName());
+			getSession().update(newsById);
+			return true;
+		}
 	}
 
 	/*
@@ -71,9 +81,9 @@ public class NewsDAOImpl extends AbstractDao implements NewsDAO {
 	public boolean deleteNews(int newsId) {
 		News news = getNewsById(newsId);
 		if(news == null) {
+			System.out.println("News by "+newsId+ " is not in database. Cannot Delete.");
 			return false;
 		}
-
 		getSession().delete(news);
 		return true;
 	}

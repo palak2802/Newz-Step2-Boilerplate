@@ -80,12 +80,16 @@
 			<td class="th_td" >${news.description}</td>
 			<td class="th_td" >${news.content}</td>
 			<td class="th_td" >${news.publishedAt}</td>
-			<td width="5%"><a href="<c:url value="updateNews" ><c:param name="newsId" value="${news.newsId}"/></c:url>">Update</a></td>
+			<td width="5%"><a href="<c:url value="updateNews" var="update"><c:param name="newsId" value="${news.newsId}"/></c:url>">Update</a></td>
 			<td width="5%"><a href="<c:url value="delete" ><c:param name="newsId" value="${news.newsId}"/></c:url>">Delete</a></td>
 		</tr>
 		</c:forEach>
 	</Table>
 	</c:if>
+	
+	<c:choose>
+		<c:when test=""></c:when>
+	</c:choose>
 	
 </body>
 </html>

@@ -60,11 +60,14 @@ public class NewsController {
 	 * news, it should show the same along with existing news items. Hence, this handler
 	 * method should redirect to the default URL i.e. "/".
 	 */
-	@PostMapping("/saveNews")
+	@PostMapping("/add")
 	public String addNews(@RequestParam("name") String name, @RequestParam("author") String author,
 						@RequestParam("description") String description, @RequestParam("content") String content) {
-		newsService.addNews(new News(name, author, description, content));
-		return "redirect:/";
+		Boolean ifNewsSaved = newsService.addNews(new News(name, author, description, content));
+		if(ifNewsSaved ==  true)
+			return "redirect:/";
+		else
+			return "/";
 	}
 
 	/*
@@ -75,8 +78,11 @@ public class NewsController {
 	 */
 	@RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
 	public String deleteNews(@RequestParam(value = "newsId") int newsId) {
-		newsService.deleteNews(newsId);
-		return "redirect:/";
+		Boolean ifNewsDeleted = newsService.deleteNews(newsId);
+		if(ifNewsDeleted == true)
+			return "redirect:/";
+		else
+			return "/";
 	}
 	
 	/*
@@ -92,7 +98,7 @@ public class NewsController {
 	
 	@RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
 	public String updateNews(@RequestParam(value = "newsId", required = false) int newsId, @RequestParam("name") String name, @RequestParam("author") String author,
-						@RequestParam("description") String description, @RequestParam("content") String content) {
+			@RequestParam("description") String description, @RequestParam("content") String content) {
 		newsService.updateNews(new News(name, author, description, content));
 		return "update";
 	}
