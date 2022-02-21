@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.stackroute.newz.dao.NewsDAO;
 import com.stackroute.newz.model.News;
-import com.stackroute.newz.service.NewsService;
 
 /*
  * Annotate the class with @Controller annotation. @Controller annotation is used to mark 
@@ -38,7 +37,7 @@ public class NewsController {
 	 * Create a News object.
 	 */
 	@Autowired
-	private NewsService newsService;
+	private NewsDAO newsDao;
 	
 	/*
 	 * Define a handler method to read the existing news from the database and add
@@ -47,8 +46,8 @@ public class NewsController {
 	 */
 	@GetMapping("/")
 	public String readNews(ModelMap map){
-		map.addAttribute("AllNews", newsService.getAllNews());
-		map.addAttribute("NewsById", newsService.getNewsById(0));
+		map.addAttribute("AllNews", newsDao.getAllNews());
+		map.addAttribute("NewsById", newsDao.getNewsById(0));
 		return "index";
 	}
 
@@ -66,20 +65,20 @@ public class NewsController {
 						@RequestParam("content") String content, ModelMap map) {
 		Integer newsId = (Integer) map.get("NewsById");
 		if(newsId == null) {
-			Boolean ifNewsSaved = newsService.addNews(new News(name, author, description, content));
+			Boolean ifNewsSaved = newsDao.addNews(new News(name, author, description, content));
 			if(ifNewsSaved ==  true)
 				return "redirect:/";
 			else
-				return "/";
+				return "index";
 		}
 		else {
-			News newsToUpdate = newsService.getNewsById(newsId);
+			News newsToUpdate = newsDao.getNewsById(newsId);
 			newsToUpdate.setNewsId(newsId);
 			newsToUpdate.setName(name);
 			newsToUpdate.setAuthor(author);
 			newsToUpdate.setContent(content);
 			newsToUpdate.setDescription(description);
-			Boolean ifNewsUpdated = newsService.updateNews(newsToUpdate);
+			Boolean ifNewsUpdated = newsDao.updateNews(newsToUpdate);
 			if(ifNewsUpdated ==  true)
 				return "/";
 			else
@@ -95,7 +94,7 @@ public class NewsController {
 	 */
 	@RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
 	public String deleteNews(@RequestParam(value = "newsId") int newsId) {
-		Boolean ifNewsDeleted = newsService.deleteNews(newsId);
+		Boolean ifNewsDeleted = newsDao.deleteNews(newsId);
 		if(ifNewsDeleted == true)
 			return "redirect:/";
 		else
@@ -108,7 +107,7 @@ public class NewsController {
 	 */
 	@RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
 	public String updateNews(@RequestParam(value = "newsId", required = false) int newsId, ModelMap map) {
-		map.addAttribute("NewsById", newsService.getNewsById(newsId));
+		map.addAttribute("NewsById", newsDao.getNewsById(newsId));
 		return "index";
 	}
 

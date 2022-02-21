@@ -21,7 +21,7 @@ import com.stackroute.newz.model.News;
  * */
 @Repository
 @Transactional("txManager")
-public class NewsDAOImpl extends AbstractDao implements NewsDAO {
+public class NewsDAOImpl implements NewsDAO {
 
 	/*
 	 * Autowiring should be implemented for the SessionFactory.
