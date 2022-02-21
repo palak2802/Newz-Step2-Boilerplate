@@ -51,6 +51,7 @@ public class News
 		this.author = author;
 		this.description = description;
 		this.content = content;
+		this.publishedAt = LocalDateTime.now();
 	}
 
 	public int getNewsId() {

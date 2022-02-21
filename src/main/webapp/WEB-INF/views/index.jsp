@@ -44,18 +44,36 @@
 		 
 	<div class="div-style"><h1>Newz Application Assignment</h1></div>
 	
-	<div class="form-center">
-	<form action="saveNews" method="post">
-		<label>Name</label><br/>
-		<input type="text" name="name"/><br/>
-		<label>Author</label><br/>
-		<input type="text" name="author"/><br/>
-		<label>Description</label><br/>
-		<input type="text" name="description"/><br/>
-		<label>Content</label><br/>
-		<input type="text" name="content"/><br/>
-		<input class="submit_button" type="submit" value="Add News"/><br/>
-	</form></div>
+	<c:choose>
+		<c:when test="${empty NewsById}">
+			<div class="form-center">
+			<form action="add" method="post">
+			<label>Name</label><br/>
+			<input type="text" name="name"/><br/>
+			<label>Author</label><br/>
+			<input type="text" name="author"/><br/>
+			<label>Description</label><br/>
+			<input type="text" name="description"/><br/>
+			<label>Content</label><br/>
+			<input type="text" name="content"/><br/>
+			<input class="submit_button" type="submit" value="ADD NEWS"/><br/>
+			</form></div>
+		</c:when>
+		<c:otherwise>
+			<div class="form-center">
+			<form action="add" method="post">
+			<label>Name</label><br/>
+			<input type="text" name="name" value=<c:out value="${NewsById.name}"/> /><br/>
+			<label>Author</label><br/>
+			<input type="text" name="author" value=<c:out value="${NewsById.author}"/> /><br/>
+			<label>Description</label><br/>
+			<input type="text" name="description" value=<c:out value="${NewsById.description}"/> /><br/>
+			<label>Content</label><br/>
+			<input type="text" name="content" value=<c:out value="${NewsById.content}"/> /><br/>
+			<input class="submit_button" type="submit" value="UPDATE NEWS"/><br/>
+			</form></div>
+		</c:otherwise>
+	</c:choose>
 	
 	<!-- display all existing news in a tabular structure with News Name, News Author, 
 	description, content, Publish Date and Action -->
@@ -80,16 +98,12 @@
 			<td class="th_td" >${news.description}</td>
 			<td class="th_td" >${news.content}</td>
 			<td class="th_td" >${news.publishedAt}</td>
-			<td width="5%"><a href="<c:url value="updateNews" var="update"><c:param name="newsId" value="${news.newsId}"/></c:url>">Update</a></td>
+			<td width="5%"><a href="<c:url value="update" ><c:param name="newsId" value="${news.newsId}"/></c:url>">Update</a></td>
 			<td width="5%"><a href="<c:url value="delete" ><c:param name="newsId" value="${news.newsId}"/></c:url>">Delete</a></td>
 		</tr>
 		</c:forEach>
 	</Table>
 	</c:if>
-	
-	<c:choose>
-		<c:when test=""></c:when>
-	</c:choose>
 	
 </body>
 </html>

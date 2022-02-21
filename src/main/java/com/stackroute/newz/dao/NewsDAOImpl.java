@@ -1,5 +1,6 @@
 package com.stackroute.newz.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -37,7 +38,7 @@ public class NewsDAOImpl extends AbstractDao implements NewsDAO {
 	 * Save the news in the database(news) table.
 	 */
 	public boolean addNews(News news) {
-		save(news);
+		sessionFactory.getCurrentSession().save(news);
 		return true;
 	}
 
@@ -46,31 +47,32 @@ public class NewsDAOImpl extends AbstractDao implements NewsDAO {
 	 * order(showing latest news first)
 	 */
 	public List<News> getAllNews() {
-		return getSession().createQuery("from News", News.class).getResultList();
+		return sessionFactory.getCurrentSession().createQuery("from News", News.class).getResultList();
 	}
 
 	/*
 	 * retrieve specific news from the database(news) table
 	 */
 	public News getNewsById(int newsId) {
-		News news = getSession().get(News.class, newsId);
+		News news = sessionFactory.getCurrentSession().get(News.class, newsId);
 		System.out.println("NewsById: "+news);
 		return news;
 	}
 
 	public boolean updateNews(News news) {
-		News newsById = getSession().get(News.class, news.getNewsId());
+		News newsById = sessionFactory.getCurrentSession().get(News.class, news.getNewsId());
 		System.out.println("NewsById: "+newsById);
 		if(newsById == null) {
 			System.out.println("News by "+news.getNewsId()+ " is not in database. Cannot Update.");
 			return false;
 		}
 		else {
-			newsById.setAuthor(news.getAuthor());
-			newsById.setContent(news.getContent());
-			newsById.setDescription(news.getDescription());
 			newsById.setName(news.getName());
-			getSession().update(newsById);
+			newsById.setAuthor(news.getAuthor());
+			newsById.setDescription(news.getDescription());
+			newsById.setContent(news.getContent());
+			newsById.setPublishedAt(LocalDateTime.now());
+			sessionFactory.getCurrentSession().update(newsById);
 			return true;
 		}
 	}
@@ -84,7 +86,7 @@ public class NewsDAOImpl extends AbstractDao implements NewsDAO {
 			System.out.println("News by "+newsId+ " is not in database. Cannot Delete.");
 			return false;
 		}
-		getSession().delete(news);
+		sessionFactory.getCurrentSession().delete(news);
 		return true;
 	}
 	

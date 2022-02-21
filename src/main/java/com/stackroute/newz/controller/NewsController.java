@@ -3,14 +3,13 @@ package com.stackroute.newz.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.stackroute.newz.dao.NewsDAO;
 import com.stackroute.newz.model.News;
 import com.stackroute.newz.service.NewsService;
 
@@ -49,6 +48,7 @@ public class NewsController {
 	@GetMapping("/")
 	public String readNews(ModelMap map){
 		map.addAttribute("AllNews", newsService.getAllNews());
+		map.addAttribute("NewsById", newsService.getNewsById(0));
 		return "index";
 	}
 
@@ -62,12 +62,29 @@ public class NewsController {
 	 */
 	@PostMapping("/add")
 	public String addNews(@RequestParam("name") String name, @RequestParam("author") String author,
-						@RequestParam("description") String description, @RequestParam("content") String content) {
-		Boolean ifNewsSaved = newsService.addNews(new News(name, author, description, content));
-		if(ifNewsSaved ==  true)
-			return "redirect:/";
-		else
-			return "/";
+						@RequestParam("description") String description, 
+						@RequestParam("content") String content, ModelMap map) {
+		Integer newsId = (Integer) map.get("NewsById");
+		if(newsId == null) {
+			Boolean ifNewsSaved = newsService.addNews(new News(name, author, description, content));
+			if(ifNewsSaved ==  true)
+				return "redirect:/";
+			else
+				return "/";
+		}
+		else {
+			News newsToUpdate = newsService.getNewsById(newsId);
+			newsToUpdate.setNewsId(newsId);
+			newsToUpdate.setName(name);
+			newsToUpdate.setAuthor(author);
+			newsToUpdate.setContent(content);
+			newsToUpdate.setDescription(description);
+			Boolean ifNewsUpdated = newsService.updateNews(newsToUpdate);
+			if(ifNewsUpdated ==  true)
+				return "/";
+			else
+				return "index";
+		}
 	}
 
 	/*
@@ -89,18 +106,10 @@ public class NewsController {
 	 * Define a handler method which will update the existing news. This handler
 	 * method should map to the URL "/update".
 	 */
-	@RequestMapping(value="/updateNews", method = {RequestMethod.GET, RequestMethod.POST})
-	public String update(@RequestParam(value = "newsId", required = false) int newsId, ModelMap map) {
-		map.addAttribute("NewsById", newsService.getNewsById(newsId));
-		map.addAttribute("AllNews", newsService.getAllNews());
-		return "update";
-	}
-	
 	@RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
-	public String updateNews(@RequestParam(value = "newsId", required = false) int newsId, @RequestParam("name") String name, @RequestParam("author") String author,
-			@RequestParam("description") String description, @RequestParam("content") String content) {
-		newsService.updateNews(new News(name, author, description, content));
-		return "update";
+	public String updateNews(@RequestParam(value = "newsId", required = false) int newsId, ModelMap map) {
+		map.addAttribute("NewsById", newsService.getNewsById(newsId));
+		return "index";
 	}
 
 }
